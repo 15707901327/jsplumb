@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #diagramContainer {
+      padding: 20px;
+      width: 80%;
+      height: 200px;
+      border: 1px solid gray;
+    }
+
+    .item {
+      position: absolute;
+      height: 100px;
+      width: 100px;
+      border: 1px solid blue;
+      float: left;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="diagramContainer">
+    <div id="A" class="item" style="top:50px;left:50px">A</div>
+    <div id="B" class="item" style="top:50px;left:450px">B</div>
+  </div>
+  <script src="./lib/jquery.js"></script>
+  <script src="./lib/jquery-ui.js"></script>
+  <script src="./lib/jquery.jsplumb.js"></script>
+
+  <script>
+    window.jsPlumb.ready(function () {
+      var jsPlumb = window.jsPlumb
+
+      jsPlumb.makeSource('A', {
+        endpoint:"Dot",
+        anchor: "Continuous"
+      })
+
+      jsPlumb.makeTarget('B', {
+        endpoint:"Dot",
+        anchor: "Continuous"
+      })
+
+      jsPlumb.draggable('A')
+      jsPlumb.draggable('B')
+    })
+  </script>
+</body>
+
+</html>
