@@ -1,7 +1,3 @@
-// 流程图ID唯一标识,用来防止重复,每次新建一个部件时此值必须加1,否则会出现异常
-sessionStorage['idIndex'] = 0;
-// 记录当前流程框的数量
-sessionStorage['currentChartAmount'] = 0;
 // 标识当前点击的流程图框,默认为none
 sessionStorage['currentChartSelected'] = 'none';
 
@@ -16,49 +12,56 @@ chartOperationStack['copy'] = [];
 
 // 记录用户具体操作,有copy,add,delete,paste
 var chartRareOperationStack = new Array;
-
-// 根蒂根基连接线样式
-var connectorPaintStyle = {
-    lineWidth: 2,
-    strokeStyle: "rgb(0,32,80)",
-    joinstyle: "round",
-    outlineColor: "rgb(251,251,251)",
-    outlineWidth: 2
-};
-// 鼠标悬浮在连接线上的样式
-var connectorHoverStyle = {
-    lineWidth: 2,
-
-    strokeStyle: "#216477",
-    outlineWidth: 0,
-    outlineColor: "rgb(251,251,251)"
-};
-var hollowCircle = {
-    endpoint: ["Dot", {radius: 4}],  //端点的外形
-    connectorStyle: connectorPaintStyle,//连接线的色彩,大小样式
-    connectorHoverStyle: connectorHoverStyle,
-    paintStyle: {
-        strokeStyle: "rgb(178,178,178)",
-        fillStyle: "rgb(178,178,178)",
-        opacity: 0.5,
-        radius: 2,
-        lineWidth: 2
-    },//端点的色彩样式
-    //anchor: "AutoDefault",
-    isSource: true,    //是否可以拖动(作为连线出发点)
-    //connector: ["Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true }],  //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
-    connector: ["Flowchart", {curviness: 100}],//设置连线为贝塞尔曲线
-    isTarget: true,    //是否可以放置(连线终点)
-    maxConnections: -1,    // 设置连接点最多可以连接几条线
-    connectorOverlays: [["Arrow", {width: 10, length: 10, location: 1}]]
-};
-
 var PJP = {};
 
 PJP.JsPlumb = function () {
 
     var _this = this;
     this.list = jsPlumb.getAllConnections(); // 获取所有的连接
+
+    // 根蒂根基连接线样式
+    this.connectorPaintStyle = {
+        lineWidth: 2,
+        strokeStyle: "rgb(0,32,80)",
+        joinstyle: "round",
+        outlineColor: "rgb(251,251,251)",
+        outlineWidth: 2
+    };
+    // 鼠标悬浮在连接线上的样式
+    this.connectorHoverStyle = {
+        lineWidth: 2,
+
+        strokeStyle: "#216477",
+        outlineWidth: 0,
+        outlineColor: "rgb(251,251,251)"
+    };
+    this.hollowCircle = {
+        endpoint: ["Dot", {radius: 4}],  //端点的外形
+        connectorStyle: this.connectorPaintStyle,//连接线的色彩,大小样式
+        connectorHoverStyle: this.connectorHoverStyle,
+        paintStyle: {
+            strokeStyle: "rgb(178,178,178)",
+            fillStyle: "rgb(178,178,178)",
+            opacity: 0.5,
+            radius: 2,
+            lineWidth: 2
+        },//端点的色彩样式
+        //anchor: "AutoDefault",
+        isSource: true,    //是否可以拖动(作为连线出发点)
+        //connector: ["Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true }],  //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
+        connector: ["Flowchart", {cornerRadius: 10}],//设置连线为贝塞尔曲线
+        isTarget: true,    //是否可以放置(连线终点)
+        maxConnections: -1,    // 设置连接点最多可以连接几条线
+        connectorOverlays: [["Diamond", {
+            location: 0.5,
+            width: 6,
+            height: 6
+        }], [["Arrow"], {
+            location: 1,
+            width: 6,
+            height: 6
+        }]]
+    };
 
     //***********************************元素拖动控制部分************************************
 
@@ -73,7 +76,6 @@ PJP.JsPlumb = function () {
         activeClass: "drop-active", //开始拖动时放置区域显示
         scope: "dragflag",
         drop: function (event, ui) {
-            sessionStorage['idIndex'] = parseInt(sessionStorage['idIndex']) + 1;
 
             // 获取鼠标坐标
             var left = parseInt(ui.offset.left - $(this).offset().left);
@@ -82,7 +84,7 @@ PJP.JsPlumb = function () {
             // // setChartLocation(top, left);// 设置坐标
 
             var name = ui.draggable[0].id;// 返回被拖动元素的ID
-            var trueId = name + "-" + sessionStorage['idIndex'] + sessionStorage['currentChartAmount'];
+            var trueId = PUnits.getGUID();
 
             /**
              * <div class="group" style="top:150px;left:500px">
@@ -110,38 +112,26 @@ PJP.JsPlumb = function () {
                 .css("margin", "0px")
                 .css("background", "#efefef");
 
-            jsPlumb.setContainer('chart-container');
-            jsPlumb.addEndpoint(trueId + 'item1', {
-                anchor: 'Right'
-            }, hollowCircle);
-            jsPlumb.addEndpoint(trueId + 'item2', {
-                anchor: 'Right'
-            }, hollowCircle);
-
             // 用jsPlumb添加锚点
-            // jsPlumb.addEndpoint(trueId, {anchors: "TopCenter"}, hollowCircle);
-            // jsPlumb.addEndpoint(trueId, {anchors: "RightMiddle"}, hollowCircle);
-            // jsPlumb.addEndpoint(trueId, {anchors: "BottomCenter"}, hollowCircle);
-            // jsPlumb.addEndpoint(trueId, {anchors: "LeftMiddle"}, hollowCircle);
+            jsPlumb.setContainer('chart-container');
+            jsPlumb.addEndpoint(trueId + 'item1', {anchor: 'Right'}, _this.hollowCircle);
+            jsPlumb.addEndpoint(trueId + 'item1', {anchor: 'Left'}, _this.hollowCircle);
+            jsPlumb.addEndpoint(trueId + 'item2', {anchor: 'Right'}, _this.hollowCircle);
+            jsPlumb.addEndpoint(trueId + 'item2', {anchor: 'Left'}, _this.hollowCircle);
 
             jsPlumb.draggable(trueId);
             $("#" + trueId).draggable({containment: "parent"}); //保证拖动不跨界
 
             // changeValue("#" + trueId); // 双击修改文本
 
-            list = jsPlumb.getAllConnections();// 获取所有的连接
-
-            // 元素ID网上加,防止重复
-            sessionStorage['idIndex'] = sessionStorage['idIndex'] + 1;
-
-            // 设置当前选择的流程框图
-            sessionStorage['currentChartSelected'] = trueId;
-
-            // 将新拖进来的流程图框JSON数据push进栈
-            chartOperationStack['add'].push(_this.getSingleChartJson(trueId));
-            chartRareOperationStack.push('add');
-
-            sessionStorage['currentChartAmount'] = parseInt(sessionStorage['currentChartAmount'], 10) + 2;
+            // list = jsPlumb.getAllConnections();// 获取所有的连接
+            //
+            // // 设置当前选择的流程框图
+            // sessionStorage['currentChartSelected'] = trueId;
+            //
+            // // 将新拖进来的流程图框JSON数据push进栈
+            // chartOperationStack['add'].push(_this.getSingleChartJson(trueId));
+            // chartRareOperationStack.push('add');
         }
     });
 
@@ -159,6 +149,59 @@ PJP.JsPlumb = function () {
             default:
                 break;
         }
+    });
+
+
+    $(".cancalline").click(function () {
+        $(".fuchuang").css({"display": "none"});
+    });
+
+
+    // 添加对连线的处理
+    jsPlumb.bind("dblclick", function (conn, originalEvent) {
+        $(".fuchuang").css({"display": "block"});
+        var aaa = conn.sourceId;
+        var bbb = conn.targetId;
+        var ccc = conn.endpoints[0].anchor.type;
+        var ddd = conn.endpoints[1].anchor.type;
+
+
+        // jsPlumb.detach(conn);
+
+        $('.sureaaa').unbind("click");
+        $(".sureaaa").click(function () {
+            var PageSourceId = aaa;
+            var PageTargetId = bbb;
+            var innercont = $(".inputcont").val();
+            var common = {
+                anchors: [ccc, ddd],
+                endpoints: ["Blank", "Blank"],
+                paintStyle: {
+                    lineWidth: 2,
+                    strokeStyle: "#002050",
+                },
+                label: innercont,
+                cssClass: PageSourceId + PageTargetId,
+                connector: ['Flowchart', {cornerRadius: 10}]
+            };
+
+            jsPlumb.connect({
+                source: PageSourceId,
+                target: PageTargetId,
+                overlays: [["Diamond", {
+                    location: 0.5,
+                    width: 6,
+                    height: 6
+                }], [["Arrow"], {
+                    location: 1,
+                    width: 6,
+                    height: 6
+                }]]
+            }, common);
+
+            $("." + PageSourceId + PageTargetId).next().html(innercont);
+            $(".fuchuang").css({"display": "none"});
+        })
     });
 
 
@@ -395,7 +438,8 @@ Object.assign(PJP.JsPlumb.prototype, {
                 var $li1 = $("<li class=\"item\" id=\"" + BlockItems[j].id + "\">" + BlockItems[j].name + "</li>");
                 $ul.append($li1);
 
-                jsPlumb.addEndpoint(BlockItems[j].id, {anchor: 'Right'}, hollowCircle);
+                jsPlumb.addEndpoint(BlockItems[j].id, {anchor: 'Right'}, this.hollowCircle);
+                jsPlumb.addEndpoint(BlockItems[j].id, {anchor: 'Left'}, this.hollowCircle);
             }
         }
 
@@ -424,19 +468,20 @@ Object.assign(PJP.JsPlumb.prototype, {
                     lineWidth: 2,
                     strokeStyle: "#002050",
                 },
-                connector: ["Flowchart"]
+                connector: ['Flowchart',{cornerRadius: 10}]
             };
 
             jsPlumb.connect({
                 source: PageSourceId,
                 target: PageTargetId,
-                overlays: [["Arrow", {
+                overlays: [["Diamond", {
+                    location: 0.5,
+                    width: 12,
+                    height: 12
+                }], [["Arrow"], {
                     location: 1,
-                    foldback: 0.618,
-                    visible: true,
-                    width: 8,
-                    height: 4,
-                    id: "arrow"
+                    width: 6,
+                    height: 6
                 }]]
             }, common);
         }

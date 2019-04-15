@@ -1,55 +1,73 @@
 {
   "connects": [
     {
-      "ConnectionId": "con_13",
-      "PageSourceId": "rect-10item1",
-      "PageTargetId": "rect-122item1",
+      "ConnectionId": "con_32",
+      "PageSourceId": "832890d4-47cf-8a7e-cb4f-f1210ae96e83item2",
+      "PageTargetId": "be782239-a0e2-0c1c-bde1-0c8bbc243afditem1",
       "Connectiontext": null,
       "Firstpoint": "Right",
       "Secondpoint": "Right"
     },
     {
-      "ConnectionId": "con_21",
-      "PageSourceId": "rect-10item2",
-      "PageTargetId": "rect-122item2",
-      "Connectiontext": null,
+      "ConnectionId": "con_44",
+      "PageSourceId": "832890d4-47cf-8a7e-cb4f-f1210ae96e83item1",
+      "PageTargetId": "0ed11d99-309a-2725-b5c1-dc4700ae0383item1",
+      "Connectiontext": "sladjf",
       "Firstpoint": "Right",
-      "Secondpoint": "Right"
+      "Secondpoint": "Left"
     }
   ],
   "block": [
     {
-      "BlockId": "rect-10",
-      "BlockX": 192,
-      "BlockY": 150,
+      "BlockId": "832890d4-47cf-8a7e-cb4f-f1210ae96e83",
+      "BlockX": 111,
+      "BlockY": 114,
       "BlockWidth": 120,
       "BlockHeight": 60,
       "BlockTitle": "流程图表题二",
       "BlockItems": [
         {
-          "id": "rect-10item1",
+          "id": "832890d4-47cf-8a7e-cb4f-f1210ae96e83item1",
           "name": "属性一"
         },
         {
-          "id": "rect-10item2",
+          "id": "832890d4-47cf-8a7e-cb4f-f1210ae96e83item2",
           "name": "属性二"
         }
       ]
     },
     {
-      "BlockId": "rect-122",
-      "BlockX": 210,
-      "BlockY": 397,
+      "BlockId": "0ed11d99-309a-2725-b5c1-dc4700ae0383",
+      "BlockX": 504,
+      "BlockY": 29,
+      "BlockWidth": 120,
+      "BlockHeight": 60,
+      "BlockTitle": "流程图表题二",
+      "BlockItems": [
+        {
+          "id": "0ed11d99-309a-2725-b5c1-dc4700ae0383item1",
+          "name": "属性一"
+        },
+        {
+          "id": "0ed11d99-309a-2725-b5c1-dc4700ae0383item2",
+          "name": "属性二"
+        }
+      ]
+    },
+    {
+      "BlockId": "be782239-a0e2-0c1c-bde1-0c8bbc243afd",
+      "BlockX": 143,
+      "BlockY": 347,
       "BlockWidth": 120,
       "BlockHeight": 60,
       "BlockTitle": "流程图表题四",
       "BlockItems": [
         {
-          "id": "rect-122item1",
+          "id": "be782239-a0e2-0c1c-bde1-0c8bbc243afditem1",
           "name": "属性一"
         },
         {
-          "id": "rect-122item2",
+          "id": "be782239-a0e2-0c1c-bde1-0c8bbc243afditem2",
           "name": "属性二"
         }
       ]

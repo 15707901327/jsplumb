@@ -11,22 +11,33 @@
     <script src="js/jquery.jsPlumb-1.4.0-all.js"></script>
     <script src="../lib/jquery.jsplumb.js"></script>
     <script src="js/html2canvas.js"></script>
+    <script src="../../js/PUnits.js"></script>
     <script src="js/jsplumb_self.js"></script>
 
     <style>
         .item {
             height: 20px;
             border: 1px solid blue;
+            list-style: none;
         }
 
-        .group{
-            position:absolute;
+        .group {
+            position: absolute;
             width: 200px;
             background-color: antiquewhite;
         }
     </style>
 </head>
 <body>
+<div class="fuchuang">
+    <div class="fuqu">
+        <p>
+            <input type="text" class="inputcont"/>
+            <span class="sureaaa">修改名称</span>
+            <input type="button" value="删除连线" class="cancalline"/>
+        </p>
+    </div>
+</div>
 <div class="top-panel">
     <div class="top-left-panel" style="width:200px;">
         <input type="button" class="fl-btn" value="部件"/>
