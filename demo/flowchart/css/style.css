@@ -449,11 +449,11 @@ display:block
 .fuqu span{line-height: 30px;text-align: center;text-indent:0;width: 80px;margin-left: 10px;background:#eee;font-size:12px;display:inline-block;border-radius:5px;cursor:pointer}
 
 .area .draggable{font-size:12px;margin:10px;}
-.area .draggable:nth-child(1)#rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_01.png);background-size:100% 100%;}
-.area .draggable:nth-child(2)#rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_02.png);background-size:100% 100%;}
-.area .draggable:nth-child(3)#rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_03.png);background-size:100% 100%;}
-.area .draggable:nth-child(4)#rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_04.png);background-size:100% 100%;}
-.area .draggable:nth-child(5)#rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_05.png);background-size:100% 100%;}
+.area .draggable:nth-child(1).rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_01.png);background-size:100% 100%;}
+.area .draggable:nth-child(2).rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_02.png);background-size:100% 100%;}
+.area .draggable:nth-child(3).rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_03.png);background-size:100% 100%;}
+.area .draggable:nth-child(4).rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_04.png);background-size:100% 100%;}
+.area .draggable:nth-child(5).rect{width:80px;height:12px;padding-top:60px;background:url(../img/ico_05.png);background-size:100% 100%;}
 
 
 .circle1{width:80px;height:29px;padding-top:51px;background:url(../img/ico_01.png);background-size:100% 100%;border-radius:50%}

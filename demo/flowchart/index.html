@@ -9,8 +9,23 @@
     <script src="external/jquery/jquery.js"></script>
     <script src="js/jquery-ui.js"></script>
     <script src="js/jquery.jsPlumb-1.4.0-all.js"></script>
+    <script src="../lib/jquery.jsplumb.js"></script>
     <script src="js/html2canvas.js"></script>
     <script src="js/jsplumb_self.js"></script>
+
+    <style>
+        .item {
+            height: 20px;
+            width: 80px;
+            border: 1px solid blue;
+        }
+
+        .group{
+            position:absolute;
+            width: 200px;
+            background-color: antiquewhite;
+        }
+    </style>
 </head>
 <body>
 <div class="top-panel">
@@ -19,7 +34,7 @@
         <a href="#" class="go_back fl-btn">列表项</a>
     </div>
     <div class="top-left-panel">
-        <input type="button" class="fl-btn" value="查看json数据"/>
+        <input type="button" class="fl-btn" value="查看json数据" id="chart-save"/>
     </div>
 </div>
 <div class="chart-content">
@@ -28,25 +43,26 @@
             <div class="chart-list chart-object">
                 <h4>可拖拽元素</h4>
                 <div class="list-content">
-                    <div class="draggable">流程图表题一</div>
-                    <div class="draggable">流程图表题二</div>
-                    <div class="draggable">流程图表题三</div>
-                    <div class="draggable">流程图表题四</div>
-                    <div class="draggable"></div>
-                    <div class="clear"></div>
-                    <div class="draggable roundedRect roundedRect1">圆角矩形1</div>
-                    <div class="draggable roundedRect roundedRect2">圆角矩形2</div>
-                    <div class="clear"></div>
-                    <div class="draggable circle circle1">圆形元素1</div>
-                    <div class="draggable circle circle2">圆形元素2</div>
-                    <div class="clear"></div>
-                    <div class="draggable people people1">人物一</div>
-                    <div class="draggable people people2">人物二</div>
+                    <div class="area">
+                        <div class="draggable rect" id="rect">流程图表题一</div>
+                        <div class="draggable rect" id="rect">流程图表题二</div>
+                        <div class="draggable rect" id="rect">流程图表题三</div>
+                        <div class="draggable rect" id="rect">流程图表题四</div>
+                        <div class="clear"></div>
+                        <div class="draggable roundedRect roundedRect1">圆角矩形1</div>
+                        <div class="draggable roundedRect roundedRect2">圆角矩形2</div>
+                        <div class="clear"></div>
+                        <div class="draggable circle circle1">圆形元素1</div>
+                        <div class="draggable circle circle2">圆形元素2</div>
+                        <div class="clear"></div>
+                        <div class="draggable people people1">人物一</div>
+                        <div class="draggable people people2">人物二</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="chart-design draggable"></div>
+    <div class="chart-design droppable" id="chart-container"></div>
 </div>
 </body>
 </html>

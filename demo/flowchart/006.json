@@ -1,0 +1,13 @@
+{
+  "connects": [
+    {
+      "ConnectionId": "con_12",
+      "PageSourceId": "rect-10item1",
+      "PageTargetId": "rect-122item1",
+      "Connectiontext": null,
+      "Firstpoint": "Right",
+      "Secondpoint": "Right"
+    }
+  ],
+  "block": []
+}

@@ -1,6 +1,558 @@
+// 流程图ID唯一标识,用来防止重复,每次新建一个部件时此值必须加1,否则会出现异常
+sessionStorage['idIndex'] = 0;
+// 记录当前流程框的数量
+sessionStorage['currentChartAmount'] = 0;
+// 标识当前点击的流程图框,默认为none
+sessionStorage['currentChartSelected'] = 'none';
+
+
+//栈,记录用户操作的先后顺序,用来进行撤销操作,数据结构为JSON,其中的copy用来复制部件
+//是个二维栈,包括新增/删除/粘贴操作
+var chartOperationStack = new Array;
+chartOperationStack['add'] = [];
+chartOperationStack['delete'] = [];
+chartOperationStack['paste'] = [];
+chartOperationStack['copy'] = [];
+
+// 记录用户具体操作,有copy,add,delete,paste
+var chartRareOperationStack = new Array;
+
+// 根蒂根基连接线样式
+var connectorPaintStyle = {
+    lineWidth: 2,
+    strokeStyle: "rgb(0,32,80)",
+    joinstyle: "round",
+    outlineColor: "rgb(251,251,251)",
+    outlineWidth: 2
+};
+// 鼠标悬浮在连接线上的样式
+var connectorHoverStyle = {
+    lineWidth: 2,
+
+    strokeStyle: "#216477",
+    outlineWidth: 0,
+    outlineColor: "rgb(251,251,251)"
+};
+var hollowCircle = {
+    endpoint: ["Dot", {radius: 4}],  //端点的外形
+    connectorStyle: connectorPaintStyle,//连接线的色彩,大小样式
+    connectorHoverStyle: connectorHoverStyle,
+    paintStyle: {
+        strokeStyle: "rgb(178,178,178)",
+        fillStyle: "rgb(178,178,178)",
+        opacity: 0.5,
+        radius: 2,
+        lineWidth: 2
+    },//端点的色彩样式
+    //anchor: "AutoDefault",
+    isSource: true,    //是否可以拖动(作为连线出发点)
+    //connector: ["Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true }],  //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
+    connector: ["Flowchart", {curviness: 100}],//设置连线为贝塞尔曲线
+    isTarget: true,    //是否可以放置(连线终点)
+    maxConnections: -1,    // 设置连接点最多可以连接几条线
+    connectorOverlays: [["Arrow", {width: 10, length: 10, location: 1}]]
+};
+
+var PJP = {};
+
+PJP.JsPlumb = function () {
+
+    var _this = this;
+    this.list = jsPlumb.getAllConnections(); // 获取所有的连接
+
+    //***********************************元素拖动控制部分************************************
+
+    // 允许元素拖动
+    $(".list-content .area").children().draggable({
+        //revert: "valid",//拖动之后原路返回
+        helper: "clone",//复制自身
+        scope: "dragflag"//标识
+    });
+    $(".droppable").droppable({
+        // accept: ".draggable", //只接受来自类.dragable的元素
+        activeClass: "drop-active", //开始拖动时放置区域显示
+        scope: "dragflag",
+        drop: function (event, ui) {
+            sessionStorage['idIndex'] = parseInt(sessionStorage['idIndex']) + 1;
+
+            // 获取鼠标坐标
+            var left = parseInt(ui.offset.left - $(this).offset().left);
+            var top = parseInt(ui.offset.top - $(this).offset().top) + 4;
+
+            // // setChartLocation(top, left);// 设置坐标
+
+            var name = ui.draggable[0].id;// 返回被拖动元素的ID
+            var trueId = name + "-" + sessionStorage['idIndex'] + sessionStorage['currentChartAmount'];
+
+            /**
+             * <div class="group" style="top:150px;left:500px">
+             *     <h4>vector</h4>
+             *     <ul>
+             *         <li id="item_left" class="item"></li>
+             *         <li id="item_left2" class="item"></li>
+             *         </ul>
+             * </div>
+             */
+            var $div = $("<div class=\"draggable" + name + " new-" + name + "\" id=\"" + trueId + "\"></div>");
+            var $h4 = $("<h4>" + $(ui.helper).html() + "</h4>");
+            var $ul = $("<ul></ul>");
+            var $li1 = $("<li class=\"item\" id=\"" + trueId + "item1\">属性一</li>");
+            var $li2 = $("<li class=\"item\" id=\"" + trueId + "item2\">属性二</li>");
+            $div.append($h4);
+            $div.append($ul);
+            $ul.append($li1);
+            $ul.append($li2);
+            $(this).append($div);
+
+            $("#" + trueId).css("position", "absolute")
+                .css("left", left)
+                .css("top", top)
+                .css("margin", "0px")
+                .css("background", "#efefef");
+
+            jsPlumb.setContainer('chart-container');
+            jsPlumb.addEndpoint(trueId + 'item1', {
+                anchor: 'Right'
+            }, hollowCircle);
+            jsPlumb.addEndpoint(trueId + 'item2', {
+                anchor: 'Right'
+            }, hollowCircle)
+
+            // 用jsPlumb添加锚点
+            // jsPlumb.addEndpoint(trueId, {anchors: "TopCenter"}, hollowCircle);
+            // jsPlumb.addEndpoint(trueId, {anchors: "RightMiddle"}, hollowCircle);
+            // jsPlumb.addEndpoint(trueId, {anchors: "BottomCenter"}, hollowCircle);
+            // jsPlumb.addEndpoint(trueId, {anchors: "LeftMiddle"}, hollowCircle);
+
+            jsPlumb.draggable(trueId);
+            $("#" + trueId).draggable({containment: "parent"}); //保证拖动不跨界
+
+            // changeValue("#" + trueId); // 双击修改文本
+
+            list = jsPlumb.getAllConnections();// 获取所有的连接
+
+            // 元素ID网上加,防止重复
+            sessionStorage['idIndex'] = sessionStorage['idIndex'] + 1;
+
+            // 设置当前选择的流程框图
+            sessionStorage['currentChartSelected'] = trueId;
+
+            // 将新拖进来的流程图框JSON数据push进栈
+            chartOperationStack['add'].push(_this.getSingleChartJson(trueId));
+            chartRareOperationStack.push('add');
+
+            sessionStorage['currentChartAmount'] = parseInt(sessionStorage['currentChartAmount'], 10) + 2;
+        }
+    });
+
+
+    // 保存数据等一些基本操作
+    $('.fl-btn').click(function (event) {
+        // 取被点击按钮的ID
+        var flBtnID = $(this).attr('id');
+        // var currentListFlag = getChartRightListFlag();// 当前显示的属性面板
+        switch (flBtnID) {
+            case 'chart-save': // 分享或保存(生成JSON)
+                var jsondata = _this.save();
+                console.log("流程图json数据：", jsondata);
+                break;
+            default:
+                break;
+        }
+    });
+
+
+    /************************* 加载图形数据 ************************************/
+    if (document.location.hash.substr(1) !== "") {
+        var jsonurl = document.location.hash.substr(1) + '.json';
+        $.getJSON(jsonurl, function (data) {
+            var sss = JSON.stringify(data);
+            _this.loadChartByJSON(sss);
+            // sessionStorage['currentChartAmount'] = sessionStorage['currentChartAmount'] + 2;
+        });
+    }
+};
+Object.assign(PJP.JsPlumb.prototype, {
+    /**
+     * 生成单个流程图数据,用在新建流程图框时使用
+     * @param id 参数ID表示被push进栈的ID
+     * @returns {string}
+     */
+    getSingleChartJson: function (id) {
+
+        var connects = [];
+
+        for (var i in this.list) {
+            for (var j in list[i]) {
+                connects.push({
+                    ConnectionId: list[i][j]['id'],
+                    PageSourceId: list[i][j]['sourceId'],
+                    PageTargetId: list[i][j]['targetId'],
+                    Connectiontext: list[i][j].getLabel(),
+                });
+            }
+        }
+        var blocks = []; // 保存方框的样式
+        var elem = $("#" + id);
+        var rareHTML = elem.html();
+        var resultHTML = rareHTML;
+
+        // 去掉在进行复制操作时误复制的img部件
+        if (rareHTML.indexOf('<img src=\"img/delete.png\"') != -1) {
+            rareHTML = rareHTML.split('<img src=\"img/delete.png\"');
+            resultHTML = rareHTML[0];
+        }
+        if (resultHTML.indexOf('<div style="z-index: 90;" ') != -1) {
+            resultHTML = resultHTML.split('<div style="z-index: 90;" ')[0];
+        }
+        /**********************字体**********************/
+            //字体
+        var Bfont = elem.css("font");
+        //字体颜色
+        var fontSize = elem.css('font-size');
+        //字体对齐方式
+        var fontAlign = elem.css('text-align');
+        //字体颜色
+        var fontColor = elem.css('color');
+
+        (Bfont == '') ? Bfont = "微软雅黑" : Bfont;
+        (fontSize == '') ? fontSize = '12' : fontSize;
+        (fontAlign == '') ? fontAlign = 'center' : fontAlign;
+        (fontColor == '') ? fontColor = 'rgb(0,0,0)' : fontColor;
+
+        /**********************物件**********************/
+            //圆角
+        var borderRadius = elem.css('borderRadius');
+        var elemType = id.split('-')[0];
+        (borderRadius == '') ? borderRadius = '0' : borderRadius;
+        //如果当前部件是圆角矩形,且borderRadius为空或者为0就把默认borderradius设置为4,下同
+        (elemType == 'roundedRect' && (borderRadius == '' || borderRadius == '0')) ? borderRadius = '4' : borderRadius;
+        (elemType == 'circle' && (borderRadius == '' || borderRadius == '0')) ? borderRadius = '15' : borderRadius;
+        //填充
+        var fillColor = elem.css('backgroundColor');
+        (fillColor == '') ? fillColor = 'rgb(255,255,255)' : fillColor;
+        //渐近度
+        var fillBlurRange = elem.css('boxShadow');//rgb(0, 0, 0) 10px 10px 17px 20px inset
+        var fillBlurSplit = fillBlurRange.split(' ');
+        (fillBlurRange == '') ? fillBlurRange = '0' : fillBlurRange = fillBlurSplit[5];
+        //渐近色
+        var fillBlurColor = fillBlurSplit[0] + fillBlurSplit[1] + fillBlurSplit[2];
+        //线框样式
+        var borderStyle = elem.css('border-left-style');
+        (borderStyle == '') ? borderStyle = 'solid' : borderStyle;
+        //线框宽度
+        var borderWidth = elem.css('border-left-width');
+        (borderWidth == '') ? borderWidth = '2' : borderWidth.split('px')[0];
+        //线框颜色
+        var borderColor = elem.css('border-left-color');
+        (borderColor == '') ? borderColor = 'rgb(136,242,75)' : borderColor;
+
+        //阴影数据
+        var shadow = elem.css('box-shadow');
+
+        //字体样式数据
+        var fontStyle = elem.css('fontStyle');
+        var fontWeight = elem.css('fontWeight');
+        var fontUnderline = elem.css('textDecoration');
+
+        //文字高度
+        var lineHeight = elem.css('line-height');
+
+        blocks.push({
+            BlockId: elem.attr('id'),
+            BlockContent: resultHTML,
+            BlockX: parseInt(elem.css("left"), 10),
+            BlockY: parseInt(elem.css("top"), 10),
+            BlockWidth: parseInt(elem.css("width"), 10),
+            BlockHeight: parseInt(elem.css("height"), 10),
+            BlockFont: Bfont,
+            BlockFontSize: fontSize,
+            BlockFontAlign: fontAlign,
+            BlockFontColor: fontColor,
+            BlockBorderRadius: borderRadius,
+            BlockBackground: fillColor,
+            BlockFillBlurRange: fillBlurRange,
+            BlockFillBlurColor: fillBlurColor,
+            BlockBorderStyle: borderStyle,
+            BlockBorderWidth: borderWidth,
+            BlockborderColor: borderColor,
+            BlockShadow: shadow,
+            BlockFontStyle: fontStyle,
+            BlockFontWeight: fontWeight,
+            BlockFontUnderline: fontUnderline,
+            BlockLineHeight: lineHeight
+        });
+
+        var serliza = "{" + '"connects":' + JSON.stringify(connects) + ',"block":' + JSON.stringify(blocks) + "}";
+        // console.log(serliza);
+        return serliza;
+    },
+
+    //********************************* 流程图数据操作区域 *********************************
+    /**
+     * 序列化全部流程图数据,json格式
+     * @returns {string}
+     */
+    save: function () {
+
+        var list = jsPlumb.getAllConnections();
+
+        // 获取连接的参数
+        var connects = [];
+        for (var i in list) {
+            connects.push({
+                ConnectionId: list[i]['id'],
+                PageSourceId: list[i]['sourceId'],
+                PageTargetId: list[i]['targetId'],
+                Connectiontext: list[i].getLabel(),
+                Firstpoint: list[i].endpoints[0].anchor.type,
+                Secondpoint: list[i].endpoints[1].anchor.type
+            });
+        }
+
+        // 获取样式相关的参数
+        var blocks = [];
+        $(".droppable .draggable").each(function (idx, elem) {
+            var elem = $(elem);
+            var rareHTML = elem.html();
+            var resultHTML = rareHTML;
+            //去掉在进行复制操作时误复制的img部件
+            if (rareHTML.indexOf('<img src=\"img/delete.png\"') != -1) {
+                rareHTML = rareHTML.split('<img src=\"img/delete.png\"');
+                resultHTML = rareHTML[0];
+            }
+
+            if (resultHTML.indexOf('<div style="z-index: 90;" ') != -1) {
+                resultHTML = resultHTML.split('<div style="z-index: 90;" ')[0];
+            }
+
+
+            if (elem.hasClass("rect")) {
+                var aaa = 'rect'
+            } else if (elem.hasClass("roundedRect")) {
+                var aaa = 'roundedRect'
+            } else if (elem.hasClass("circle")) {
+                var aaa = 'circle'
+            } else {
+                var aaa = 'rect'
+            }
+
+            if (elem.hasClass("people")) {
+                var elemClass = 'people'
+            }
+
+            elem.eletype = aaa;
+
+            /**********************字体**********************/
+                //字体
+            var Bfont = elem.css("font");
+            //字体颜色
+            var fontSize = elem.css('font-size');
+            //字体对齐方式
+            var fontAlign = elem.css('text-align');
+            //字体颜色
+            var fontColor = elem.css('color');
+
+            (Bfont == '') ? Bfont = "微软雅黑" : Bfont;
+            (fontSize == '') ? fontSize = '12' : fontSize;
+            (fontAlign == '') ? fontAlign = 'center' : fontAlign;
+            (fontColor == '') ? fontColor = 'rgb(0,0,0)' : fontColor;
+
+            /**********************物件**********************/
+                //圆角
+            var borderRadius = elem.css('borderRadius');
+            var elemType = elem.attr('id').split('-')[0];
+            (borderRadius == '') ? borderRadius = '0' : borderRadius;
+            //如果当前部件是圆角矩形,且borderRadius为空或者为0就把默认borderradius设置为4,下同
+            (elemType == 'roundedRect' && (borderRadius == '' || borderRadius == '0')) ? borderRadius = '4' : borderRadius;
+            (elemType == 'circle' && (borderRadius == '' || borderRadius == '0')) ? borderRadius = '15' : borderRadius;
+            //填充
+            var fillColor = elem.css('backgroundColor');
+            (fillColor == '') ? fillColor = 'rgb(255,255,255)' : fillColor;
+            //渐近度
+            var fillBlurRange = elem.css('boxShadow');//rgb(0, 0, 0) 10px 10px 17px 20px inset
+            var fillBlurSplit = fillBlurRange.split(' ');
+            (fillBlurRange == '') ? fillBlurRange = '0' : fillBlurRange = fillBlurSplit[5];
+            //渐近色
+            var fillBlurColor = fillBlurSplit[0] + fillBlurSplit[1] + fillBlurSplit[2];
+            //线框样式
+            var borderStyle = elem.css('border-left-style');
+            (borderStyle == '') ? borderStyle = 'solid' : borderStyle;
+            //线框宽度
+            var borderWidth = elem.css('border-left-width');
+            (borderWidth == '') ? borderWidth = '2' : borderWidth.split('px')[0];
+            //线框颜色
+            var borderColor = elem.css('border-left-color');
+            (borderColor == '') ? borderColor = 'rgb(136,242,75)' : borderColor;
+
+            //阴影数据
+            var shadow = elem.css('box-shadow');
+
+            //字体样式数据
+            var fontStyle = elem.css('fontStyle');
+            var fontWeight = elem.css('fontWeight');
+            var fontUnderline = elem.css('textDecoration');
+
+            //文字高度
+            var lineHeight = elem.css('line-height');
+
+            blocks.push({
+                BlockId: elem.attr('id'),
+                BlockClass: elemClass,
+                BlockType: elem.eletype,
+                BlockContent: resultHTML,
+                BlockX: parseInt(elem.css("left"), 10),
+                BlockY: parseInt(elem.css("top"), 10),
+                BlockWidth: parseInt(elem.css("width"), 10),
+                BlockHeight: parseInt(elem.css("height"), 10),
+                BlockFont: Bfont,
+                BlockFontSize: fontSize,
+                BlockFontAlign: fontAlign,
+                BlockFontColor: fontColor,
+                BlockBorderRadius: borderRadius,
+                BlockBackground: fillColor,
+                BlockFillBlurRange: fillBlurRange,
+                BlockFillBlurColor: fillBlurColor,
+                BlockBorderStyle: borderStyle,
+                BlockBorderWidth: borderWidth,
+                BlockborderColor: borderColor,
+                BlockShadow: shadow,
+                BlockFontStyle: fontStyle,
+                BlockFontWeight: fontWeight,
+                BlockFontUnderline: fontUnderline,
+                BlockLineHeight: lineHeight
+            });
+
+        });
+
+        var serliza = "{" + '"connects":' + JSON.stringify(connects) + ',"block":' + JSON.stringify(blocks) + "}";
+        // console.log(serliza);
+        return serliza;
+    },
+
+    /********************************** 通过json加载流程图 *********************************/
+    /**
+     * 通过json加载流程图
+     * @param data
+     * @returns {boolean}
+     */
+    loadChartByJSON: function (data) {
+
+        // 清空图形显示区
+        $("#chart-container").html(' ');
+
+        var unpack = JSON.parse(data);
+
+        // 显示基本图形
+        for (var i = 0; i < unpack['block'].length; i++) {
+            var BlockId = unpack['block'][i]['BlockId'];
+            var BlockClass = unpack['block'][i]['BlockClass'];
+            var BlockContent = unpack['block'][i]['BlockContent'];
+
+            var BlockX = unpack['block'][i]['BlockX'];
+            var BlockY = unpack['block'][i]['BlockY'];
+            var width = unpack['block'][i]['BlockWidth'];
+            var height = unpack['block'][i]['BlockHeight'];
+            var font = unpack['block'][i]['BlockFont'];
+            var fontSize = unpack['block'][i]['BlockFontSize'];
+            var fontAlign = unpack['block'][i]['BlockFontAlign'];
+            var fontColor = unpack['block'][i]['BlockFontColor'];
+            var borderRadius = unpack['block'][i]['BlockBorderRadius'];
+            var backgroundColor = unpack['block'][i]['BlockBackground'];
+            var fillBlurRange = unpack['block'][i]['BlockFillBlurRange'];
+            var fillBlurColor = unpack['block'][i]['BlockFillBlurColor'];
+            var borderStyle = unpack['block'][i]['BlockBorderStyle'];
+            var borderColor = unpack['block'][i]['BlockborderColor'];
+            var shadow = unpack['block'][i]['BlockShadow'];
+            var fontStyle = unpack['block'][i]['BlockFontStyle'];
+            var fontWeight = unpack['block'][i]['BlockFontWeight'];
+            var fontUnderline = unpack['block'][i]['BlockFontUnderline'];
+            var lineHeight = unpack['block'][i]['BlockLineHeight'];
+
+            var blockAttr = BlockId.split('-')[0];
+
+            var boxInsetShadowStyle = '10px 10px ' + fillBlurRange + "px 20px " + fillBlurColor + ' inset';
+
+            $('.chart-design').append("<div class=\"draggable " + blockAttr + ' ' + BlockClass + " new-" + blockAttr + "\" id=\"" + BlockId + "\">" + BlockContent + "</div>");
+            $("#" + BlockId).css("left", BlockX)
+                .css("top", BlockY)
+                .css("position", "absolute")
+                .css("margin", "0px")
+                .css("width", width)
+                .css("height", height)
+                .css('font', font)
+                .css('font-size', fontSize)
+                .css('text-align', fontAlign)
+                .css('color', fontColor)
+                .css('border-radius', borderRadius)
+                .css('box-shadow', boxInsetShadowStyle)
+                .css('border-style', borderStyle)
+                .css('border-color', borderColor)
+                .css('box-shadow', shadow)
+                .css('font-style', fontStyle)
+                .css('font-weight', fontWeight)
+                .css('font-underline', fontUnderline)
+                .css('line-height', lineHeight);
+        }
+
+        // 显示连接
+        for (i = 0; i < unpack['connects'].length; i++) {
+
+            var ConnectionId = unpack['connects'][i]['ConnectionId'];
+            var PageSourceId = unpack['connects'][i]['PageSourceId'];
+            var PageTargetId = unpack['connects'][i]['PageTargetId'];
+            var Firstpoint = unpack['connects'][i]['Firstpoint'];
+            var Secondpoint = unpack['connects'][i]['Secondpoint'];
+
+            //用jsPlumb添加锚点
+            jsPlumb.addEndpoint(PageSourceId, {anchors: "TopCenter"}, hollowCircle);
+            jsPlumb.addEndpoint(PageSourceId, {anchors: "RightMiddle"}, hollowCircle);
+            jsPlumb.addEndpoint(PageSourceId, {anchors: "BottomCenter"}, hollowCircle);
+            jsPlumb.addEndpoint(PageSourceId, {anchors: "LeftMiddle"}, hollowCircle);
+
+            jsPlumb.addEndpoint(PageTargetId, {anchors: "TopCenter"}, hollowCircle);
+            jsPlumb.addEndpoint(PageTargetId, {anchors: "RightMiddle"}, hollowCircle);
+            jsPlumb.addEndpoint(PageTargetId, {anchors: "BottomCenter"}, hollowCircle);
+            jsPlumb.addEndpoint(PageTargetId, {anchors: "LeftMiddle"}, hollowCircle);
+
+            jsPlumb.draggable(PageSourceId);
+            jsPlumb.draggable(PageTargetId);
+
+            $("#" + PageSourceId).draggable({
+                containment: "parent"
+            }); //保证拖动不跨界
+            $("#" + PageTargetId).draggable({
+                containment: "parent"
+            }); //保证拖动不跨界
+
+            var common = {
+                anchors: [Firstpoint, Secondpoint],
+                endpoints: ["Blank", "Blank"],
+                label: unpack['connects'][i]['Connectiontext'],
+                paintStyle: {
+                    lineWidth: 2,
+                    strokeStyle: "#002050",
+                },
+            };
+
+            jsPlumb.connect({
+                source: PageSourceId,
+                target: PageTargetId,
+                overlays: [["Arrow", {
+                    location: 1,
+                    foldback: 0.618,
+                    visible: true,
+                    width: 8,
+                    height: 4,
+                    id: "arrow"
+                }]]
+            }, common);
+        }
+
+        return true;
+    }
+});
+
 $(function () {
-    /******************* UI控制部分 ***************/
-    //初始化动画效果
-    $('.chart-ratio-form,.chart-fill-border-selector,#chart-v-shadow-display,#chart-h-shadow-display,#chart-blur-range-display,#chart-shadow-blur-display,#chart-shadow-color-display,#chart-shadow-spread-display').css("opacity",'0.6');
-    console.log(123);
+    var jsplumb = new PJP.JsPlumb();
 });

@@ -15,21 +15,37 @@
     }
 
     .item {
-      height: 80px;
+      height: 20px;
       width: 80px;
       border: 1px solid blue;
-      float: left;
+    }
+
+    .group{
+      position:absolute;
+      width: 200px;
+      background-color: antiquewhite;
     }
   </style>
 </head>
 
 <body>
   <div id="diagramContainer">
-
-    <div id="item_right" class="item" style="margin-left:50px; width: 100px">
-      <div id="item_left" class="item"></div>
+    <div class="group" style="top:150px;left:500px">
+      <h4>vector</h4>
+      <ul>
+        <li id="item_left" class="item"></li>
+        <li id="item_left2" class="item"></li>
+      </ul>
     </div>
-    <div id="item_right-2" class="item" style="margin-left:50px;margin-top: 100px"></div>
+
+    <div class="group" style="top:10px;left:10px">
+      <h4>vector</h4>
+      <ul>
+        <li id="item_right1" class="item"></li>
+        <li id="item_right2" class="item"></li>
+      </ul>
+    </div>
+
   </div>
   <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -72,7 +88,7 @@
         strokeStyle: 'red'
       },
       isSource: true, // 是否可以拖动（作为连线起点）
-      connector: ['Straight', {
+      connector: ['Bezier', {
         gap: 0,
         cornerRadius: 5,
         alwaysRespectStubs: true
@@ -103,22 +119,22 @@
     }
 
     jsPlumb.ready(function () {
-      jsPlumb.setContainer('diagramContainer')
+      jsPlumb.setContainer('diagramContainer');
 
       jsPlumb.addEndpoint('item_left', {
         anchors: ['Right']
       }, config.baseStyle)
 
-      jsPlumb.addEndpoint('item_right', {
-        anchor: 'Left'
-      }, config.baseStyle)
-
-      jsPlumb.addEndpoint('item_right', {
+      jsPlumb.addEndpoint('item_left2', {
         anchor: 'Right'
       }, config.baseStyle)
 
-      jsPlumb.addEndpoint('item_right-2', {
-        anchor: 'Left'
+      jsPlumb.addEndpoint('item_right1', {
+        anchor: 'Right'
+      }, config.baseStyle)
+
+      jsPlumb.addEndpoint('item_right2', {
+        anchor: 'Right'
       }, config.baseStyle)
     })
   </script>
