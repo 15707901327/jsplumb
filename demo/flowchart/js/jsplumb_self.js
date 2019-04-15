@@ -93,7 +93,7 @@ PJP.JsPlumb = function () {
              *         </ul>
              * </div>
              */
-            var $div = $("<div class=\"draggable" + name + " new-" + name + "\" id=\"" + trueId + "\"></div>");
+            var $div = $("<div class=\"draggable " + name + " new-" + name + "\" id=\"" + trueId + "\"></div>");
             var $h4 = $("<h4>" + $(ui.helper).html() + "</h4>");
             var $ul = $("<ul></ul>");
             var $li1 = $("<li class=\"item\" id=\"" + trueId + "item1\">属性一</li>");
@@ -116,7 +116,7 @@ PJP.JsPlumb = function () {
             }, hollowCircle);
             jsPlumb.addEndpoint(trueId + 'item2', {
                 anchor: 'Right'
-            }, hollowCircle)
+            }, hollowCircle);
 
             // 用jsPlumb添加锚点
             // jsPlumb.addEndpoint(trueId, {anchors: "TopCenter"}, hollowCircle);
@@ -313,114 +313,24 @@ Object.assign(PJP.JsPlumb.prototype, {
         // 获取样式相关的参数
         var blocks = [];
         $(".droppable .draggable").each(function (idx, elem) {
-            var elem = $(elem);
-            var rareHTML = elem.html();
-            var resultHTML = rareHTML;
-            //去掉在进行复制操作时误复制的img部件
-            if (rareHTML.indexOf('<img src=\"img/delete.png\"') != -1) {
-                rareHTML = rareHTML.split('<img src=\"img/delete.png\"');
-                resultHTML = rareHTML[0];
-            }
+            var $elem = $(elem);
 
-            if (resultHTML.indexOf('<div style="z-index: 90;" ') != -1) {
-                resultHTML = resultHTML.split('<div style="z-index: 90;" ')[0];
-            }
-
-
-            if (elem.hasClass("rect")) {
-                var aaa = 'rect'
-            } else if (elem.hasClass("roundedRect")) {
-                var aaa = 'roundedRect'
-            } else if (elem.hasClass("circle")) {
-                var aaa = 'circle'
-            } else {
-                var aaa = 'rect'
-            }
-
-            if (elem.hasClass("people")) {
-                var elemClass = 'people'
-            }
-
-            elem.eletype = aaa;
-
-            /**********************字体**********************/
-                //字体
-            var Bfont = elem.css("font");
-            //字体颜色
-            var fontSize = elem.css('font-size');
-            //字体对齐方式
-            var fontAlign = elem.css('text-align');
-            //字体颜色
-            var fontColor = elem.css('color');
-
-            (Bfont == '') ? Bfont = "微软雅黑" : Bfont;
-            (fontSize == '') ? fontSize = '12' : fontSize;
-            (fontAlign == '') ? fontAlign = 'center' : fontAlign;
-            (fontColor == '') ? fontColor = 'rgb(0,0,0)' : fontColor;
-
-            /**********************物件**********************/
-                //圆角
-            var borderRadius = elem.css('borderRadius');
-            var elemType = elem.attr('id').split('-')[0];
-            (borderRadius == '') ? borderRadius = '0' : borderRadius;
-            //如果当前部件是圆角矩形,且borderRadius为空或者为0就把默认borderradius设置为4,下同
-            (elemType == 'roundedRect' && (borderRadius == '' || borderRadius == '0')) ? borderRadius = '4' : borderRadius;
-            (elemType == 'circle' && (borderRadius == '' || borderRadius == '0')) ? borderRadius = '15' : borderRadius;
-            //填充
-            var fillColor = elem.css('backgroundColor');
-            (fillColor == '') ? fillColor = 'rgb(255,255,255)' : fillColor;
-            //渐近度
-            var fillBlurRange = elem.css('boxShadow');//rgb(0, 0, 0) 10px 10px 17px 20px inset
-            var fillBlurSplit = fillBlurRange.split(' ');
-            (fillBlurRange == '') ? fillBlurRange = '0' : fillBlurRange = fillBlurSplit[5];
-            //渐近色
-            var fillBlurColor = fillBlurSplit[0] + fillBlurSplit[1] + fillBlurSplit[2];
-            //线框样式
-            var borderStyle = elem.css('border-left-style');
-            (borderStyle == '') ? borderStyle = 'solid' : borderStyle;
-            //线框宽度
-            var borderWidth = elem.css('border-left-width');
-            (borderWidth == '') ? borderWidth = '2' : borderWidth.split('px')[0];
-            //线框颜色
-            var borderColor = elem.css('border-left-color');
-            (borderColor == '') ? borderColor = 'rgb(136,242,75)' : borderColor;
-
-            //阴影数据
-            var shadow = elem.css('box-shadow');
-
-            //字体样式数据
-            var fontStyle = elem.css('fontStyle');
-            var fontWeight = elem.css('fontWeight');
-            var fontUnderline = elem.css('textDecoration');
-
-            //文字高度
-            var lineHeight = elem.css('line-height');
-
+            var title = $elem.find("h4")[0].innerHTML;
+            var items = [];
+            $elem.find("ul > li").each(function (id, item) {
+                items.push({
+                    id: $(item).attr("id"),
+                    name: item.innerHTML
+                });
+            });
             blocks.push({
-                BlockId: elem.attr('id'),
-                BlockClass: elemClass,
-                BlockType: elem.eletype,
-                BlockContent: resultHTML,
-                BlockX: parseInt(elem.css("left"), 10),
-                BlockY: parseInt(elem.css("top"), 10),
-                BlockWidth: parseInt(elem.css("width"), 10),
-                BlockHeight: parseInt(elem.css("height"), 10),
-                BlockFont: Bfont,
-                BlockFontSize: fontSize,
-                BlockFontAlign: fontAlign,
-                BlockFontColor: fontColor,
-                BlockBorderRadius: borderRadius,
-                BlockBackground: fillColor,
-                BlockFillBlurRange: fillBlurRange,
-                BlockFillBlurColor: fillBlurColor,
-                BlockBorderStyle: borderStyle,
-                BlockBorderWidth: borderWidth,
-                BlockborderColor: borderColor,
-                BlockShadow: shadow,
-                BlockFontStyle: fontStyle,
-                BlockFontWeight: fontWeight,
-                BlockFontUnderline: fontUnderline,
-                BlockLineHeight: lineHeight
+                BlockId: $elem.attr('id'),
+                BlockX: parseInt($elem.css("left"), 10),
+                BlockY: parseInt($elem.css("top"), 10),
+                BlockWidth: parseInt($elem.css("width"), 10),
+                BlockHeight: parseInt($elem.css("height"), 10),
+                BlockTitle: title,
+                BlockItems: items,
             });
 
         });
@@ -444,55 +354,49 @@ Object.assign(PJP.JsPlumb.prototype, {
         var unpack = JSON.parse(data);
 
         // 显示基本图形
+        jsPlumb.setContainer('chart-container');
         for (var i = 0; i < unpack['block'].length; i++) {
             var BlockId = unpack['block'][i]['BlockId'];
-            var BlockClass = unpack['block'][i]['BlockClass'];
-            var BlockContent = unpack['block'][i]['BlockContent'];
-
+            var BlockTitle = unpack['block'][i]['BlockTitle'];
+            var BlockItems = unpack['block'][i]['BlockItems'];
             var BlockX = unpack['block'][i]['BlockX'];
             var BlockY = unpack['block'][i]['BlockY'];
-            var width = unpack['block'][i]['BlockWidth'];
-            var height = unpack['block'][i]['BlockHeight'];
-            var font = unpack['block'][i]['BlockFont'];
-            var fontSize = unpack['block'][i]['BlockFontSize'];
-            var fontAlign = unpack['block'][i]['BlockFontAlign'];
-            var fontColor = unpack['block'][i]['BlockFontColor'];
-            var borderRadius = unpack['block'][i]['BlockBorderRadius'];
-            var backgroundColor = unpack['block'][i]['BlockBackground'];
-            var fillBlurRange = unpack['block'][i]['BlockFillBlurRange'];
-            var fillBlurColor = unpack['block'][i]['BlockFillBlurColor'];
-            var borderStyle = unpack['block'][i]['BlockBorderStyle'];
-            var borderColor = unpack['block'][i]['BlockborderColor'];
-            var shadow = unpack['block'][i]['BlockShadow'];
-            var fontStyle = unpack['block'][i]['BlockFontStyle'];
-            var fontWeight = unpack['block'][i]['BlockFontWeight'];
-            var fontUnderline = unpack['block'][i]['BlockFontUnderline'];
-            var lineHeight = unpack['block'][i]['BlockLineHeight'];
+            var BlockWidth = unpack['block'][i]['BlockWidth'];
+            var BlockHeight = unpack['block'][i]['BlockHeight'];
 
-            var blockAttr = BlockId.split('-')[0];
 
-            var boxInsetShadowStyle = '10px 10px ' + fillBlurRange + "px 20px " + fillBlurColor + ' inset';
+            /**
+             * <div class="group" style="top:150px;left:500px">
+             *     <h4>vector</h4>
+             *     <ul>
+             *         <li id="item_left" class="item"></li>
+             *         <li id="item_left2" class="item"></li>
+             *         </ul>
+             * </div>
+             */
+            var $div = $("<div class=\"draggable\" id=\"" + BlockId + "\"></div>");
+            var $h4 = $("<h4>" + BlockTitle + "</h4>");
+            $div.append($h4);
+            var $ul = $("<ul></ul>");
 
-            $('.chart-design').append("<div class=\"draggable " + blockAttr + ' ' + BlockClass + " new-" + blockAttr + "\" id=\"" + BlockId + "\">" + BlockContent + "</div>");
-            $("#" + BlockId).css("left", BlockX)
-                .css("top", BlockY)
+            $div.append($ul);
+            $(".chart-design").append($div);
+
+            $("#" + BlockId)
                 .css("position", "absolute")
+                .css("left", BlockX)
+                .css("top", BlockY)
+                .css("width", BlockWidth)
+                .css("height", BlockHeight)
                 .css("margin", "0px")
-                .css("width", width)
-                .css("height", height)
-                .css('font', font)
-                .css('font-size', fontSize)
-                .css('text-align', fontAlign)
-                .css('color', fontColor)
-                .css('border-radius', borderRadius)
-                .css('box-shadow', boxInsetShadowStyle)
-                .css('border-style', borderStyle)
-                .css('border-color', borderColor)
-                .css('box-shadow', shadow)
-                .css('font-style', fontStyle)
-                .css('font-weight', fontWeight)
-                .css('font-underline', fontUnderline)
-                .css('line-height', lineHeight);
+                .css("background", "#efefef");
+
+            for (var j = 0; j < BlockItems.length; j++) {
+                var $li1 = $("<li class=\"item\" id=\"" + BlockItems[j].id + "\">" + BlockItems[j].name + "</li>");
+                $ul.append($li1);
+
+                jsPlumb.addEndpoint(BlockItems[j].id, {anchor: 'Right'}, hollowCircle);
+            }
         }
 
         // 显示连接
@@ -505,25 +409,12 @@ Object.assign(PJP.JsPlumb.prototype, {
             var Secondpoint = unpack['connects'][i]['Secondpoint'];
 
             //用jsPlumb添加锚点
-            jsPlumb.addEndpoint(PageSourceId, {anchors: "TopCenter"}, hollowCircle);
-            jsPlumb.addEndpoint(PageSourceId, {anchors: "RightMiddle"}, hollowCircle);
-            jsPlumb.addEndpoint(PageSourceId, {anchors: "BottomCenter"}, hollowCircle);
-            jsPlumb.addEndpoint(PageSourceId, {anchors: "LeftMiddle"}, hollowCircle);
 
-            jsPlumb.addEndpoint(PageTargetId, {anchors: "TopCenter"}, hollowCircle);
-            jsPlumb.addEndpoint(PageTargetId, {anchors: "RightMiddle"}, hollowCircle);
-            jsPlumb.addEndpoint(PageTargetId, {anchors: "BottomCenter"}, hollowCircle);
-            jsPlumb.addEndpoint(PageTargetId, {anchors: "LeftMiddle"}, hollowCircle);
+            jsPlumb.draggable($("#" + PageSourceId).parent().parent().attr("id"));
+            jsPlumb.draggable($("#" + PageTargetId).parent().parent().attr("id"));
 
-            jsPlumb.draggable(PageSourceId);
-            jsPlumb.draggable(PageTargetId);
-
-            $("#" + PageSourceId).draggable({
-                containment: "parent"
-            }); //保证拖动不跨界
-            $("#" + PageTargetId).draggable({
-                containment: "parent"
-            }); //保证拖动不跨界
+            $("#" + PageSourceId).parent().parent().draggable({containment: "parent"}); //保证拖动不跨界
+            $("#" + PageTargetId).parent().parent().draggable({containment: "parent"}); //保证拖动不跨界
 
             var common = {
                 anchors: [Firstpoint, Secondpoint],
@@ -533,6 +424,7 @@ Object.assign(PJP.JsPlumb.prototype, {
                     lineWidth: 2,
                     strokeStyle: "#002050",
                 },
+                connector: ["Flowchart"]
             };
 
             jsPlumb.connect({

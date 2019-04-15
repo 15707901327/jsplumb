@@ -1,13 +1,58 @@
 {
   "connects": [
     {
-      "ConnectionId": "con_12",
+      "ConnectionId": "con_13",
       "PageSourceId": "rect-10item1",
       "PageTargetId": "rect-122item1",
       "Connectiontext": null,
       "Firstpoint": "Right",
       "Secondpoint": "Right"
+    },
+    {
+      "ConnectionId": "con_21",
+      "PageSourceId": "rect-10item2",
+      "PageTargetId": "rect-122item2",
+      "Connectiontext": null,
+      "Firstpoint": "Right",
+      "Secondpoint": "Right"
     }
   ],
-  "block": []
+  "block": [
+    {
+      "BlockId": "rect-10",
+      "BlockX": 192,
+      "BlockY": 150,
+      "BlockWidth": 120,
+      "BlockHeight": 60,
+      "BlockTitle": "流程图表题二",
+      "BlockItems": [
+        {
+          "id": "rect-10item1",
+          "name": "属性一"
+        },
+        {
+          "id": "rect-10item2",
+          "name": "属性二"
+        }
+      ]
+    },
+    {
+      "BlockId": "rect-122",
+      "BlockX": 210,
+      "BlockY": 397,
+      "BlockWidth": 120,
+      "BlockHeight": 60,
+      "BlockTitle": "流程图表题四",
+      "BlockItems": [
+        {
+          "id": "rect-122item1",
+          "name": "属性一"
+        },
+        {
+          "id": "rect-122item2",
+          "name": "属性二"
+        }
+      ]
+    }
+  ]
 }
