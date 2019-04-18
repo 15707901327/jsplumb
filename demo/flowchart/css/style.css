@@ -156,7 +156,7 @@ body {
     left: 230px;
     right: 0px;
     width: auto;
-    background: #fff;
+    background-image: url('../img/bg2.png');
 }
 
 .hiden_fix {
@@ -658,4 +658,8 @@ body {
 ._jsPlumb_endpoint_anchor_ input {
     position: relative;
     z-index: 3;
+}
+
+.test{
+    background-image: image("../img/spot_nor.png");
 }

@@ -5,14 +5,17 @@
     <title>工作流程图</title>
 
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" href="../minimap/minimap.css">
 
-    <script src="external/jquery/jquery.js"></script>
+    <script src="external/jquery/jquery_1.11.3.js"></script>
     <script src="js/jquery-ui.js"></script>
-    <script src="js/jquery.jsPlumb-1.4.0-all.js"></script>
+<!--    <script src="js/jquery.jsPlumb-1.4.0-all.js"></script>-->
     <script src="../lib/jquery.jsplumb.js"></script>
-    <script src="js/html2canvas.js"></script>
-    <script src="../../js/PUnits.js"></script>
+<!--    <script src="js/html2canvas.js"></script>-->
+<!--    <script src="../../js/PUnits.js"></script>-->
     <script src="js/jsplumb_self.js"></script>
+
+    <script src="../minimap/minimap.js"></script>
 
     <style>
         .item {
@@ -27,6 +30,40 @@
             background-color: antiquewhite;
         }
     </style>
+
+    <script>
+        $(function () {
+            var jsplumb = new PJP.JsPlumb();
+
+            //***********************************元素拖动控制部分************************************
+
+            // 允许元素拖动
+            $(".list-content .area").children().draggable({
+                //revert: "valid",//拖动之后原路返回
+                helper: "clone",//复制自身
+                scope: "dragflag"//标识
+            });
+            $(".droppable").droppable({
+                accept: ".draggable", //只接受来自类.dragable的元素
+                // activeClass: "drop-active", //开始拖动时放置区域显示
+                scope: "dragflag",
+                drop: function (event, ui) {
+
+                    // 获取鼠标坐标
+                    var left = parseInt(ui.offset.left - $(this).offset().left);
+                    var top = parseInt(ui.offset.top - $(this).offset().top) + 4;
+
+                    var jsonurl = 'config.json';
+                    $.getJSON(jsonurl, function (data) {
+                        data = data[ui.draggable[0].id];
+                        data.BlockX = left;
+                        data.BlockY = top;
+                        jsplumb.createChart(data);
+                    });
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="fuchuang">
@@ -54,10 +91,10 @@
                 <h4>可拖拽元素</h4>
                 <div class="list-content">
                     <div class="area">
-                        <div class="draggable rect" id="rect">流程图表题一</div>
-                        <div class="draggable rect" id="rect">流程图表题二</div>
-                        <div class="draggable rect" id="rect">流程图表题三</div>
-                        <div class="draggable rect" id="rect">流程图表题四</div>
+                        <div class="draggable rect" id="rect0">流程图表题一</div>
+                        <div class="draggable rect" id="rect1">流程图表题二</div>
+                        <div class="draggable rect" id="rect2">流程图表题三</div>
+                        <div class="draggable rect" id="rect3">流程图表题四</div>
                         <div class="clear"></div>
                         <div class="draggable roundedRect roundedRect1">圆角矩形1</div>
                         <div class="draggable roundedRect roundedRect2">圆角矩形2</div>
