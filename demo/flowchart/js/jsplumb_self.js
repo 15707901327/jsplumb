@@ -189,6 +189,9 @@ Object.assign(PJP.JsPlumb.prototype, {
             jsPlumb.addEndpoint(id, {anchor: 'Left'}, this.hollowCircle);
         }
 
+        // 保存当前创建的节点
+        this.currentBlock.push(data.BlockId);
+
         // 查找并连线
         for (i = 0; i < data.BlockItems.length; i++) {
             var pageSource = data.BlockItems[i].PageSource;
@@ -221,9 +224,6 @@ Object.assign(PJP.JsPlumb.prototype, {
 
         jsPlumb.draggable(trueId + "");
         $("#" + trueId).draggable({containment: "parent"}); //保证拖动不跨界
-
-        // 保存当前创建的节点
-        this.currentBlock.push(data.BlockId);
     },
 
     /**

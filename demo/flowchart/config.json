@@ -14,6 +14,12 @@
             "AttributeID": "1",
             "Firstpoint": "Right",
             "Secondpoint": "Left"
+          },
+          {
+            "BlockId": "BlockId0",
+            "AttributeID": "2",
+            "Firstpoint": "Right",
+            "Secondpoint": "Left"
           }
         ]
       },

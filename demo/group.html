@@ -4,16 +4,116 @@
     <meta charset="UTF-8">
     <title>组实例</title>
     <script src="../dist/js/jsplumb_2.9.1.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul{
+            text-align: center;
+        }
+        li{
+            list-style: none;
+            border: 1px solid #da378c;
+        }
+
+        .diagramContainer{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .group-container{
+            position: absolute;
+            border: 1px solid #333333;
+            min-width: 100px;
+        }
+        .title{
+            background-color: aquamarine;
+        }
+
+        .jtk-group-collapsed ul,.jtk-group-collapsed li{
+            display: none;
+        }
+    </style>
     <script>
         jsPlumb.ready(function () {
+            jsPlumb.setContainer(document.getElementById("diagramContainer"));
             jsPlumb.addGroup({
-                el: "foo",
-                id: "aGroup"
+                el: foo,
+                id:"one",
+                droppable:false,
+                anchor:"Continuous",
+                endpoint:[ "Dot", { radius:3 } ]
             });
+            jsPlumb.addToGroup("one", document.getElementById("item1"));
+            jsPlumb.addToGroup("one", document.getElementById("item2"));
+
+            jsPlumb.addGroup({
+                el:document.getElementById("foo11"),
+                id:"two"
+            });
+            jsPlumb.addEndpoint("item1", {
+                endpoint:"Dot",
+                anchor: 'Right',
+                isSource: true,
+                isTarget: true
+            });
+            jsPlumb.addEndpoint("item11", {
+                endpoint:"Dot",
+                anchor: 'Right',
+                isSource: true,
+                isTarget: true
+            });
+
+            jsPlumb.addEndpoint("item2", {
+                endpoint:"Dot",
+                anchor: 'Right',
+                isSource: true,
+                isTarget: true
+            });
+            jsPlumb.addEndpoint("item12", {
+                endpoint:"Dot",
+                anchor: 'Right',
+                isSource: true,
+                isTarget: true
+            });
+
+            var key = 0;
+            document.getElementById("title1").addEventListener("click",function () {
+                if(key%2 !== 1){
+                    jsPlumb.collapseGroup("one");
+                } else{
+                    jsPlumb.expandGroup("one");
+                }
+                key++;
+            });
+
+            jsPlumb.bind("group:add",function (info) {
+                console.log(info);
+            })
         })
     </script>
 </head>
 <body>
-<div id="foo">实例</div>
+<div id="diagramContainer" class="diagramContainer">
+    <div id="foo" class="group-container">
+        <div class="title" id="title1">数组一</div>
+        <ul>
+            <li id="item1">属性一</li>
+            <li id="item2">属性二</li>
+            <li>属性三</li>
+            <li>属性四</li>
+        </ul>
+    </div>
+    <div id="foo11" class="group-container">
+        <div class="title">数组一</div>
+        <ul>
+            <li id="item11">属性一</li>
+            <li id="item12">属性二</li>
+            <li>属性三</li>
+            <li>属性四</li>
+        </ul>
+    </div>
+</div>
 </body>
 </html>
