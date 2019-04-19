@@ -1,6 +1,18 @@
 var PJP = {};
 
-PJP.JsPlumb = function () {
+/**
+ * 流程图实例
+ * @param options
+ * @constructor
+ */
+PJP.JsPlumb = function (options) {
+
+    options = options || {};
+    this.containerId = options.containerId !== undefined ? options.containerId : "pjp-container";
+    this.container = document.getElementById(this.containerId);
+
+    // 设置根节点
+    jsPlumb.setContainer(this.container);
 
     var _this = this;
 
@@ -21,21 +33,21 @@ PJP.JsPlumb = function () {
     };
     this.hollowCircle = {
         endpoint: ["Image", {src: "img/spot_nor.png"}],  //端点的外形
-        connectorStyle: this.connectorPaintStyle, //连接线的色彩,大小样式
-        connectorHoverStyle: this.connectorHoverStyle,
-        paintStyle: {
-            strokeStyle: "rgb(178,178,178)",
-            fillStyle: "rgb(178,178,178)",
-            opacity: 0.5,
-            radius: 2,
-            lineWidth: 2
-        },//端点的色彩样式
+        // connectorStyle: this.connectorPaintStyle, //连接线的色彩,大小样式
+        // connectorHoverStyle: this.connectorHoverStyle,
+        // paintStyle: {
+        //     strokeStyle: "rgb(178,178,178)",
+        //     fillStyle: "rgb(178,178,178)",
+        //     opacity: 0.5,
+        //     radius: 2,
+        //     lineWidth: 2
+        // },//端点的色彩样式
         //anchor: "AutoDefault",
         isSource: true,    //是否可以拖动(作为连线出发点)
         //connector: ["Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true }],  //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
         connector: ["Flowchart", {cornerRadius: 10}],//设置连线为贝塞尔曲线
         isTarget: true,    //是否可以放置(连线终点)
-        maxConnections: -1,    // 设置连接点最多可以连接几条线
+        // maxConnections: -1,    // 设置连接点最多可以连接几条线
         connectorOverlays: [["Diamond", {
             location: 0.5,
             width: 6,
@@ -50,95 +62,95 @@ PJP.JsPlumb = function () {
     // 保存当前添加的节点
     this.currentBlock = [];
 
-    // 保存数据等一些基本操作
-    $('.fl-btn').click(function (event) {
-        // 取被点击按钮的ID
-        var flBtnID = $(this).attr('id');
-        // var currentListFlag = getChartRightListFlag();// 当前显示的属性面板
-        switch (flBtnID) {
-            case 'chart-save': // 分享或保存(生成JSON)
-                var jsondata = _this.save();
-                console.log("流程图json数据：", jsondata);
-                break;
-            default:
-                break;
-        }
-    });
-
-
-    $(".cancalline").click(function () {
-        $(".fuchuang").css({"display": "none"});
-    });
-
-
-    // 添加对连线的处理
-    jsPlumb.bind("dblclick", function (conn, originalEvent) {
-        $(".fuchuang").css({"display": "block"});
-        var aaa = conn.sourceId;
-        var bbb = conn.targetId;
-        var ccc = conn.endpoints[0].anchor.type;
-        var ddd = conn.endpoints[1].anchor.type;
-
-        _this.connectionDblclick({
-            sourceId: conn.sourceId,
-            targetId: conn.targetId,
-        });
-
-
-        // jsPlumb.detach(conn);
-
-        $('.sureaaa').unbind("click");
-        $(".sureaaa").click(function () {
-            var PageSourceId = aaa;
-            var PageTargetId = bbb;
-            var innercont = $(".inputcont").val();
-            var common = {
-                anchors: [ccc, ddd],
-                endpoints: ["Blank", "Blank"],
-                paintStyle: {
-                    lineWidth: 2,
-                    strokeStyle: "#002050",
-                },
-                label: innercont,
-                cssClass: PageSourceId + PageTargetId,
-                connector: ['Flowchart', {cornerRadius: 10}]
-            };
-
-            jsPlumb.connect({
-                source: PageSourceId,
-                target: PageTargetId,
-                overlays: [["Diamond", {
-                    location: 0.5,
-                    width: 6,
-                    height: 6
-                }], [["Arrow"], {
-                    location: 1,
-                    width: 6,
-                    height: 6
-                }]]
-            }, common);
-
-            $("." + PageSourceId + PageTargetId).next().html(innercont);
-            $(".fuchuang").css({"display": "none"});
-        })
-    });
-    jsPlumb.bind('connection', function (info, originalEvent) {
-        _this.connection({
-            sourceId: info.sourceId,
-            targetId: info.targetId
-        });
-    });
-
-
-    /************************* 加载图形数据 ************************************/
-    if (document.location.hash.substr(1) !== "") {
-        var jsonurl = "data/" + document.location.hash.substr(1) + '.json';
-        $.getJSON(jsonurl, function (data) {
-            var sss = JSON.stringify(data);
-            _this.loadChartByJSON(sss);
-            // sessionStorage['currentChartAmount'] = sessionStorage['currentChartAmount'] + 2;
-        });
-    }
+    // // 保存数据等一些基本操作
+    // $('.fl-btn').click(function (event) {
+    //     // 取被点击按钮的ID
+    //     var flBtnID = $(this).attr('id');
+    //     // var currentListFlag = getChartRightListFlag();// 当前显示的属性面板
+    //     switch (flBtnID) {
+    //         case 'chart-save': // 分享或保存(生成JSON)
+    //             var jsondata = _this.save();
+    //             console.log("流程图json数据：", jsondata);
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // });
+    //
+    //
+    // $(".cancalline").click(function () {
+    //     $(".fuchuang").css({"display": "none"});
+    // });
+    //
+    //
+    // // 添加对连线的处理
+    // jsPlumb.bind("dblclick", function (conn, originalEvent) {
+    //     $(".fuchuang").css({"display": "block"});
+    //     var aaa = conn.sourceId;
+    //     var bbb = conn.targetId;
+    //     var ccc = conn.endpoints[0].anchor.type;
+    //     var ddd = conn.endpoints[1].anchor.type;
+    //
+    //     _this.connectionDblclick({
+    //         sourceId: conn.sourceId,
+    //         targetId: conn.targetId,
+    //     });
+    //
+    //
+    //     // jsPlumb.detach(conn);
+    //
+    //     $('.sureaaa').unbind("click");
+    //     $(".sureaaa").click(function () {
+    //         var PageSourceId = aaa;
+    //         var PageTargetId = bbb;
+    //         var innercont = $(".inputcont").val();
+    //         var common = {
+    //             anchors: [ccc, ddd],
+    //             endpoints: ["Blank", "Blank"],
+    //             paintStyle: {
+    //                 lineWidth: 2,
+    //                 strokeStyle: "#002050",
+    //             },
+    //             label: innercont,
+    //             cssClass: PageSourceId + PageTargetId,
+    //             connector: ['Flowchart', {cornerRadius: 10}]
+    //         };
+    //
+    //         jsPlumb.connect({
+    //             source: PageSourceId,
+    //             target: PageTargetId,
+    //             overlays: [["Diamond", {
+    //                 location: 0.5,
+    //                 width: 6,
+    //                 height: 6
+    //             }], [["Arrow"], {
+    //                 location: 1,
+    //                 width: 6,
+    //                 height: 6
+    //             }]]
+    //         }, common);
+    //
+    //         $("." + PageSourceId + PageTargetId).next().html(innercont);
+    //         $(".fuchuang").css({"display": "none"});
+    //     })
+    // });
+    // jsPlumb.bind('connection', function (info, originalEvent) {
+    //     _this.connection({
+    //         sourceId: info.sourceId,
+    //         targetId: info.targetId
+    //     });
+    // });
+    //
+    //
+    // /************************* 加载图形数据 ************************************/
+    // if (document.location.hash.substr(1) !== "") {
+    //     var jsonurl = "data/" + document.location.hash.substr(1) + '.json';
+    //     $.getJSON(jsonurl, function (data) {
+    //         var sss = JSON.stringify(data);
+    //         _this.loadChartByJSON(sss);
+    //         // sessionStorage['currentChartAmount'] = sessionStorage['currentChartAmount'] + 2;
+    //     });
+    // }
 };
 Object.assign(PJP.JsPlumb.prototype, {
 
@@ -149,40 +161,40 @@ Object.assign(PJP.JsPlumb.prototype, {
     createChart: function (data) {
         var i, j;
 
-        var trueId = data.BlockId;
+        var groupId = data.BlockId;
         // 如果已经存在节点实例，直接返回
-        if (document.getElementById(trueId) !== null) {
+        if (document.getElementById(groupId) !== null) {
             return;
         }
 
         /**
-         * <div class="group" style="top:150px;left:500px">
-         *     <h4>vector</h4>
+         * <div id="foo" class="group-container">
+         *     <div class="title" id="title1">数组一</div>
          *     <ul>
-         *         <li id="item_left" class="item"></li>
-         *         <li id="item_left2" class="item"></li>
+         *         <li id="item1">属性一</li>
+         *         <li id="item2">属性二</li>
+         *         <li>属性三</li>
+         *         <li>属性四</li>
          *         </ul>
          * </div>
          */
-        var $div = $("<div class=\"draggable new-rect\" id=\"" + trueId + "\"></div>");
-        $('#chart-container').append($div);
-        $("#" + trueId).css("position", "absolute")
-            .css("left", data.BlockX)
-            .css("top", data.BlockY)
-            .css("margin", "0px")
-            .css("background", "#efefef");
+        var $div = $("<div class=\"group-container\" id=\"" + groupId + "\"></div>");
+        $($div).css("left", data.BlockX)
+            .css("top", data.BlockY);
+        $(this.container).append($div);
+        $div.append("<div class=\"title\" id=\"title1\">" + data.BlockTitle + "</div>");
 
-        var $h4 = $("<h4>" + data.BlockTitle + "</h4>");
-        $div.append($h4);
+        jsPlumb.addGroup({
+            el: document.getElementById(groupId),
+            id: groupId
+        });
 
-        var $ul = $("<ul></ul>");
-        $div.append($ul);
-
-        jsPlumb.setContainer('chart-container');
         for (i = 0; i < data.BlockItems.length; i++) {
-            var id = trueId + "_" + data.BlockItems[i].id;
-            var $li1 = $("<li class=\"item\" id=\"" + id + "\">" + data.BlockItems[i].name + "</li>");
-            $ul.append($li1);
+            var id = data.BlockId + "_" + data.BlockItems[i].id;
+            var $item = $("<div class=\"\" id=\"" + id + "\">" + data.BlockItems[i].name + "</div>");
+            $div.append($item);
+
+            jsPlumb.addToGroup(groupId, document.getElementById(id));
 
             // 用jsPlumb添加锚点
             jsPlumb.addEndpoint(id, {anchor: 'Right'}, this.hollowCircle);
@@ -203,7 +215,7 @@ Object.assign(PJP.JsPlumb.prototype, {
                             firstPoint: pageSource[j].Firstpoint,
                             secondPoint: pageSource[j].Secondpoint,
                             source: pageSource[j].BlockId + "_" + pageSource[j].AttributeID,
-                            target: trueId + "_" + data.BlockItems[i].id
+                            target: groupId + "_" + data.BlockItems[i].id
                         });
                     }
                 }
@@ -214,7 +226,7 @@ Object.assign(PJP.JsPlumb.prototype, {
                         this._createLine({
                             firstPoint: pageTarget[j].Firstpoint,
                             secondPoint: pageTarget[j].Secondpoint,
-                            source: trueId + "_" + data.BlockItems[i].id,
+                            source: groupId + "_" + data.BlockItems[i].id,
                             target: pageTarget[j].BlockId + "_" + pageTarget[j].AttributeID
                         });
                     }
@@ -222,8 +234,23 @@ Object.assign(PJP.JsPlumb.prototype, {
             }
         }
 
-        jsPlumb.draggable(trueId + "");
-        $("#" + trueId).draggable({containment: "parent"}); //保证拖动不跨界
+        // var els = document.querySelectorAll(groupId);
+        // jsPlumb.draggable(els);
+        // $("#" + groupId).draggable({containment: "parent"}); //保证拖动不跨界
+
+        // 事件
+        var key = 0;
+        document.getElementById("title1").addEventListener("click", function () {
+            if (key % 2 !== 1) {
+                jsPlumb.collapseGroup("one");
+            } else {
+                jsPlumb.expandGroup("one");
+            }
+            key++;
+        });
+        jsPlumb.bind("group:add", function (info) {
+            console.log(info);
+        });
     },
 
     /**
@@ -239,10 +266,6 @@ Object.assign(PJP.JsPlumb.prototype, {
         var LineCommon = {
             anchors: [options.firstPoint, options.secondPoint],
             endpoints: ["Blank", "Blank"],
-            paintStyle: {
-                lineWidth: 2,
-                strokeStyle: "#002050",
-            },
             connector: ['Flowchart', {cornerRadius: 10}]
         };
 

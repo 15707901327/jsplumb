@@ -15,7 +15,9 @@
     <script src="js/jsplumb_self.js"></script>
     <script>
         $(function () {
-            var jsplumb = new PJP.JsPlumb();
+            var jsplumb = new PJP.JsPlumb({
+                containerId: "chart-container"
+            });
 
             //***********************************元素拖动控制部分************************************
 

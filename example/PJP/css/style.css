@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+ul{
+    text-align: center;
+}
+li{
+    list-style: none;
+    border: 1px solid #da378c;
+}
+
+.group-container{
+    position: absolute;
+    border: 1px solid #333333;
+    min-width: 100px;
+    font-size: 12px;
+    text-align: center;
+    background: rgb(239, 239, 239);
+    left: auto;
+}
+.title{
+    background-color: aquamarine;
+}
+
+.jtk-group-collapsed ul,.jtk-group-collapsed li{
+    display: none;
+}
+
+.item {
+    border: 1px solid blue;
+}

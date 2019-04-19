@@ -5059,7 +5059,7 @@ return _first(el, function (_el) {
   define('jsplumb', [], function () { return jsPlumb })
 		define('jsplumbinstance', [], function () { return jsPlumb.getInstance() })
 	}
- // CommonJS
+ // CommonJSdraggable
   if (typeof exports !== 'undefined') {
   exports.jsPlumb = jsPlumb
   	}

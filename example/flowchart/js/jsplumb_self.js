@@ -21,21 +21,21 @@ PJP.JsPlumb = function () {
     };
     this.hollowCircle = {
         endpoint: ["Image", {src: "img/spot_nor.png"}],  //端点的外形
-        connectorStyle: this.connectorPaintStyle, //连接线的色彩,大小样式
-        connectorHoverStyle: this.connectorHoverStyle,
-        paintStyle: {
-            strokeStyle: "rgb(178,178,178)",
-            fillStyle: "rgb(178,178,178)",
-            opacity: 0.5,
-            radius: 2,
-            lineWidth: 2
-        },//端点的色彩样式
+        // connectorStyle: this.connectorPaintStyle, //连接线的色彩,大小样式
+        // connectorHoverStyle: this.connectorHoverStyle,
+        // paintStyle: {
+        //     strokeStyle: "rgb(178,178,178)",
+        //     fillStyle: "rgb(178,178,178)",
+        //     opacity: 0.5,
+        //     radius: 2,
+        //     lineWidth: 2
+        // },//端点的色彩样式
         //anchor: "AutoDefault",
         isSource: true,    //是否可以拖动(作为连线出发点)
         //connector: ["Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true }],  //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
         connector: ["Flowchart", {cornerRadius: 10}],//设置连线为贝塞尔曲线
         isTarget: true,    //是否可以放置(连线终点)
-        maxConnections: -1,    // 设置连接点最多可以连接几条线
+        // maxConnections: -1,    // 设置连接点最多可以连接几条线
         connectorOverlays: [["Diamond", {
             location: 0.5,
             width: 6,
