@@ -1,0 +1,124 @@
+{
+  "rect0": {
+    "BlockId": "BlockId0",
+    "BlockX": 306,
+    "BlockY": 112,
+    "BlockTitle": "流程图表题一",
+    "BlockItems": [
+      {
+        "id": 1,
+        "name": "属性一",
+        "PageTarget": [
+          {
+            "BlockId": "BlockId1",
+            "AttributeID": "1",
+            "Firstpoint": "Right",
+            "Secondpoint": "Left"
+          },
+          {
+            "BlockId": "BlockId0",
+            "AttributeID": "2",
+            "Firstpoint": "Right",
+            "Secondpoint": "Left"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "属性二",
+        "PageTarget": [
+          {
+            "BlockId": "BlockId2",
+            "AttributeID": "1",
+            "Firstpoint": "Right",
+            "Secondpoint": "Left"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "属性二"
+      }
+    ]
+  },
+  "rect1": {
+    "BlockId": "BlockId1",
+    "BlockX": 306,
+    "BlockY": 112,
+    "BlockTitle": "流程图表题二",
+    "BlockItems": [
+      {
+        "id": 1,
+        "name": "属性一",
+        "PageSource": [
+          {
+            "BlockId": "BlockId0",
+            "AttributeID": "1",
+            "Firstpoint": "Right",
+            "Secondpoint": "Left"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "属性二",
+        "PageTarget": [
+          {
+            "BlockId": "BlockId3",
+            "AttributeID": "1",
+            "Firstpoint": "Right",
+            "Secondpoint": "Right"
+          }
+        ]
+      }
+    ]
+  },
+  "rect2": {
+    "BlockId": "BlockId2",
+    "BlockX": 306,
+    "BlockY": 112,
+    "BlockTitle": "流程图表题三",
+    "BlockItems": [
+      {
+        "id": 1,
+        "name": "属性一",
+        "PageSource": [
+          {
+            "BlockId": "BlockId0",
+            "AttributeID": "2",
+            "Firstpoint": "Right",
+            "Secondpoint": "Left"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "属性二"
+      }
+    ]
+  },
+  "rect3": {
+    "BlockId": "BlockId3",
+    "BlockX": 306,
+    "BlockY": 112,
+    "BlockTitle": "流程图表题四",
+    "BlockItems": [
+      {
+        "id": 1,
+        "name": "属性一",
+        "PageSource": [
+          {
+            "BlockId": "BlockId1",
+            "AttributeID": "2",
+            "Firstpoint": "Right",
+            "Secondpoint": "Right"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "属性二"
+      }
+    ]
+  }
+}

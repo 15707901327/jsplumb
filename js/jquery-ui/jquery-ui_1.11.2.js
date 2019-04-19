@@ -1282,7 +1282,7 @@ $.fn.position = function( options ) {
 			marginTop: marginTop
 		};
 
-		$.each( [ "left", "top" ], function( i, dir ) {
+		$.each( [ "left", "top" ], function(i, dir ) {
 			if ( $.ui.position[ collision[ i ] ] ) {
 				$.ui.position[ collision[ i ] ][ dir ]( position, {
 					targetWidth: targetWidth,
@@ -16197,7 +16197,7 @@ var effectSize = $.effects.effect.size = function( o, done ) {
 						left: el.to.left
 					});
 				} else {
-					$.each([ "top", "left" ], function( idx, pos ) {
+					$.each([ "top", "left" ], function(idx, pos ) {
 						el.css( pos, function( _, str ) {
 							var val = parseInt( str, 10 ),
 								toRef = idx ? el.to.left : el.to.top;

@@ -2,35 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>工作流程图</title>
+    <title>流程图</title>
 
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
-    <link rel="stylesheet" href="../minimap/minimap.css">
+    <link rel="stylesheet" type="text/css" href="../flowchart/css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 
-    <script src="external/jquery/jquery_1.11.3.js"></script>
-    <script src="js/jquery-ui.js"></script>
-<!--    <script src="js/jquery.jsPlumb-1.4.0-all.js"></script>-->
-    <script src="../lib/jquery.jsplumb.js"></script>
-<!--    <script src="js/html2canvas.js"></script>-->
-<!--    <script src="../../js/PUnits.js"></script>-->
+    <script src="../../js/jquery/jquery_1.11.3.js"></script>
+    <script src="../../js/jquery-ui/jquery-ui_1.11.2.js"></script>
+
+    <script src="../../js/jsplumb/jsplumb_2.9.1.js"></script>
+
     <script src="js/jsplumb_self.js"></script>
-
-    <script src="../minimap/minimap.js"></script>
-
-    <style>
-        .item {
-            height: 20px;
-            border: 1px solid blue;
-            list-style: none;
-        }
-
-        .group {
-            position: absolute;
-            width: 200px;
-            background-color: antiquewhite;
-        }
-    </style>
-
     <script>
         $(function () {
             var jsplumb = new PJP.JsPlumb();
@@ -53,7 +35,7 @@
                     var left = parseInt(ui.offset.left - $(this).offset().left);
                     var top = parseInt(ui.offset.top - $(this).offset().top) + 4;
 
-                    var jsonurl = 'config.json';
+                    var jsonurl = 'data/config.json';
                     $.getJSON(jsonurl, function (data) {
                         data = data[ui.draggable[0].id];
                         data.BlockX = left;
@@ -75,6 +57,7 @@
         </p>
     </div>
 </div>
+<!--导航栏-->
 <div class="top-panel">
     <div class="top-left-panel" style="width:200px;">
         <input type="button" class="fl-btn" value="部件"/>
@@ -84,7 +67,9 @@
         <input type="button" class="fl-btn" value="查看json数据" id="chart-save"/>
     </div>
 </div>
+<!--内容-->
 <div class="chart-content">
+    <!--左侧-->
     <div class="chart-right-panel">
         <div class="chart-right-list">
             <div class="chart-list chart-object">
@@ -95,20 +80,12 @@
                         <div class="draggable rect" id="rect1">流程图表题二</div>
                         <div class="draggable rect" id="rect2">流程图表题三</div>
                         <div class="draggable rect" id="rect3">流程图表题四</div>
-                        <div class="clear"></div>
-                        <div class="draggable roundedRect roundedRect1">圆角矩形1</div>
-                        <div class="draggable roundedRect roundedRect2">圆角矩形2</div>
-                        <div class="clear"></div>
-                        <div class="draggable circle circle1">圆形元素1</div>
-                        <div class="draggable circle circle2">圆形元素2</div>
-                        <div class="clear"></div>
-                        <div class="draggable people people1">人物一</div>
-                        <div class="draggable people people2">人物二</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!--右侧-->
     <div class="chart-design droppable" id="chart-container"></div>
 </div>
 </body>
