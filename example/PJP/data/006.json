@@ -1,15 +1,7 @@
 {
   "connects": [
     {
-      "ConnectionId": "con_33",
-      "PageSourceId": "BlockId0_1",
-      "PageTargetId": "BlockId1_1",
-      "Connectiontext": null,
-      "Firstpoint": "Right",
-      "Secondpoint": "Left"
-    },
-    {
-      "ConnectionId": "con_38",
+      "ConnectionId": "con_25",
       "PageSourceId": "BlockId1_2",
       "PageTargetId": "BlockId3_1",
       "Connectiontext": null,
@@ -17,25 +9,33 @@
       "Secondpoint": "Right"
     },
     {
-      "ConnectionId": "con_43",
-      "PageSourceId": "BlockId0_3",
+      "ConnectionId": "con_30",
+      "PageSourceId": "BlockId1_2",
       "PageTargetId": "BlockId3_1",
       "Connectiontext": null,
       "Firstpoint": "Right",
-      "Secondpoint": "Left"
+      "Secondpoint": "Right"
     },
     {
-      "ConnectionId": "con_56",
-      "PageSourceId": "BlockId0_2",
-      "PageTargetId": "BlockId2_1",
+      "ConnectionId": "con_47",
+      "PageSourceId": "BlockId0_1",
+      "PageTargetId": "BlockId1_1",
       "Connectiontext": null,
       "Firstpoint": "Right",
       "Secondpoint": "Left"
     },
     {
-      "ConnectionId": "con_60",
-      "PageSourceId": "BlockId2_2",
-      "PageTargetId": "BlockId1_2",
+      "ConnectionId": "con_52",
+      "PageSourceId": "BlockId0_1",
+      "PageTargetId": "BlockId0_2",
+      "Connectiontext": null,
+      "Firstpoint": "Right",
+      "Secondpoint": "Left"
+    },
+    {
+      "ConnectionId": "con_57",
+      "PageSourceId": "BlockId0_2",
+      "PageTargetId": "BlockId2_1",
       "Connectiontext": null,
       "Firstpoint": "Right",
       "Secondpoint": "Left"
@@ -43,34 +43,10 @@
   ],
   "block": [
     {
-      "BlockId": "BlockId0",
-      "BlockX": 77,
-      "BlockY": 217,
-      "BlockWidth": 120,
-      "BlockHeight": 82,
-      "BlockTitle": "流程图表题一",
-      "BlockItems": [
-        {
-          "id": "BlockId0_1",
-          "name": "属性一"
-        },
-        {
-          "id": "BlockId0_2",
-          "name": "属性二"
-        },
-        {
-          "id": "BlockId0_3",
-          "name": "属性二"
-        }
-      ]
-    },
-    {
       "BlockId": "BlockId1",
-      "BlockX": 556,
-      "BlockY": 62,
-      "BlockWidth": 120,
-      "BlockHeight": 60,
-      "BlockTitle": "流程图表题二",
+      "BlockX": 189,
+      "BlockY": 165,
+      "BlockTitle": "表二",
       "BlockItems": [
         {
           "id": "BlockId1_1",
@@ -83,12 +59,26 @@
       ]
     },
     {
+      "BlockId": "BlockId2",
+      "BlockX": 166,
+      "BlockY": 486,
+      "BlockTitle": "表三",
+      "BlockItems": [
+        {
+          "id": "BlockId2_1",
+          "name": "属性一"
+        },
+        {
+          "id": "BlockId2_2",
+          "name": "属性二"
+        }
+      ]
+    },
+    {
       "BlockId": "BlockId3",
-      "BlockX": 266,
-      "BlockY": 621,
-      "BlockWidth": 120,
-      "BlockHeight": 60,
-      "BlockTitle": "流程图表题四",
+      "BlockX": 332,
+      "BlockY": 328,
+      "BlockTitle": "表四",
       "BlockItems": [
         {
           "id": "BlockId3_1",
@@ -101,19 +91,21 @@
       ]
     },
     {
-      "BlockId": "BlockId2",
-      "BlockX": 467,
-      "BlockY": 360,
-      "BlockWidth": 120,
-      "BlockHeight": 60,
-      "BlockTitle": "流程图表题三",
+      "BlockId": "BlockId0",
+      "BlockX": 378,
+      "BlockY": 592,
+      "BlockTitle": "题一",
       "BlockItems": [
         {
-          "id": "BlockId2_1",
+          "id": "BlockId0_1",
           "name": "属性一"
         },
         {
-          "id": "BlockId2_2",
+          "id": "BlockId0_2",
+          "name": "属性二"
+        },
+        {
+          "id": "BlockId0_3",
           "name": "属性二"
         }
       ]

@@ -10,23 +10,96 @@ li{
     border: 1px solid #da378c;
 }
 
-.group-container{
-    position: absolute;
-    border: 1px solid #333333;
-    min-width: 100px;
-    font-size: 12px;
-    text-align: center;
-    background: rgb(239, 239, 239);
-    left: auto;
+.chart-design{
+    overflow: hidden;
 }
 .title{
-    background-color: aquamarine;
+    position: relative;
+    top: 0;
+    left: -5px;
+    padding: 2px 54px 2px 5px;
+    font-size: 14px;
+    color: #efefef;
+    border-radius: 5px;
+    background: url(../img/mod_01.png) -5px -4px no-repeat;
+    height: 25px;
+    line-height: 25px;
+    width: 70px;
+}
+.title span{
+    position: relative;
+    right: -25px;
+}
+.node-collapse{
+    position: relative;
+    right: -100px;
+    top: -15px;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+    border-width: 6px 5px 0;
+    border-style: solid;
+    border-color: #fff transparent transparent;
+}
+.node-collapse:after {
+    /*content: "-";*/
+}
+.group-container.collapsed .node-collapse:after {
+    content: "+";
+}
+.del{
+    position: absolute;
+    top: 9px;
+    left: 18px;
+    height: 12px;
+    width: 12px;
+    cursor: pointer;
+    background: url(../img/icon.png) no-repeat;
+}
+.del:after {
+    /*content: "X";*/
+}
+.group-container{
+    position: absolute;
+    min-width: 100px;
+    text-align: center;
+    font-size: 16px;
+}
+.group-container .item{
+    color: rgba(239, 239, 239, 0.9);
+    left: 0;
+    top: 25px;
+    font-size: 14px;
+    padding: 0 0 0 10px;
+    background-color: #485260;
+    height: 25px;
+    line-height: 25px;
+    text-align: left;
+    min-width: 120px;
+}
+.group-container .title + .item {
+    border-radius: 5px 5px 0 0;
+    border-top: 1px solid #000;
+}
+.group-container div:last-child{
+    border-radius: 0 0 5px 5px;
 }
 
-.jtk-group-collapsed ul,.jtk-group-collapsed li{
+.jtk-group-collapsed .item{
     display: none;
 }
 
-.item {
-    border: 1px solid blue;
+.custom_overlay{
+    font-size: 10px;
+    width: 32px;
+    height: 32px;
+    background: url(../img/node_nor.png) no-repeat;
+    text-align: center;
+    line-height: 32px;
+    color: wheat;
+    font-weight: 800;
+    background-size: 32px 32px;
+}
+.custom_overlay:after{
+    content: "2";
 }

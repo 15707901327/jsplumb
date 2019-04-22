@@ -3,7 +3,7 @@
     "BlockId": "BlockId0",
     "BlockX": 306,
     "BlockY": 112,
-    "BlockTitle": "流程图表题一",
+    "BlockTitle": "表一",
     "BlockItems": [
       {
         "id": 1,
@@ -45,7 +45,7 @@
     "BlockId": "BlockId1",
     "BlockX": 306,
     "BlockY": 112,
-    "BlockTitle": "流程图表题二",
+    "BlockTitle": "表二",
     "BlockItems": [
       {
         "id": 1,
